@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IterationBurndown StandardReport AppSDK2</title>
+
+    <script type="text/javascript" src="/apps/2.0/sdk.js"></script>
+
+    <script type="text/javascript">
+        Rally.onReady(function () {
+                Ext.define('CustomApp', {
+    extend: 'Rally.app.App',
+    items:[{
+            xtype: 'container',
+            itemId: 'pickerContainer'
+        },
+        {
+            xtype: 'container',
+            itemId: 'reportContainer'
+        
+        }
+    ],
+    launch: function() {
+        this.down('#pickerContainer').add({
+            xtype: 'rallyprojectpicker',
+            fieldLabel: 'select project',
+            itemId:'proj',
+            margin: 10,
+            listeners:{
+                change: function(combobox){
+                    if (this.down('#report')) {
+                        Ext.ComponentQuery.query('#reportContainer')[0].remove(Ext.ComponentQuery.query('#report')[0], true);
+                    }
+                    this.onProjectSelected(combobox.getSelectedRecord().get('_ref'));
+                },
+                scope: this
+            }
+        });
+    },
+    onProjectSelected:function(projectRef){ 
+        this.down('#reportContainer').add({
+            xtype: 'rallystandardreport',
+            project: projectRef,
+            itemId: 'report',
+            width: 600,
+            height: 400,
+            reportConfig: {
+                report: Rally.ui.report.StandardReport.Reports.IterationBurndown
+            }
+        });
+    }
+});
+            
+
+            Rally.launchApp('CustomApp', {
+                name:"IterationBurndown StandardReport AppSDK2",
+	            parentRepos:""
+            });
+
+        });
+    </script>
+
+
+
+    <style type="text/css">
+        .app {
+  /* Add app styles here */
+}
+
+    </style>
+</head>
+<body>
+</body>
+</html>
